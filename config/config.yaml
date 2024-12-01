@@ -1,0 +1,9 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: dapr-config
+spec:
+  httpPipeline:
+    handlers:
+    - name: opa-middleware
+      type: middleware.http.opa

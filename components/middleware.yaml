@@ -1,0 +1,28 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: opa-middleware
+spec:
+  type: middleware.http.opa
+  version: v1
+  metadata:
+    - name: readBody
+      value: "true"
+    - name: rego
+      value: |
+        package http
+
+        default allow = false
+
+        # Allow service invocation to orders endpoint
+        allow {
+            input.request.method == "POST"
+            input.request.path == "/v1.0/invoke/publisher/method/orders"
+            trace(sprintf("Allowing access to orders endpoint: %v", [input.request.path]))
+        }
+
+        # Allow health checks
+        allow {
+            input.request.method == "GET"
+            input.request.path == "/healthz"
+        }
